@@ -1,4 +1,4 @@
-package orm
+package main
 
 import (
 	"fmt"
@@ -35,7 +35,7 @@ func handleRequests() {
 
 
 func main() {
-	fmt.Println("Go ORM Tutorial")
+	fmt.Println("Go ORM")
 
 	// Handle Subsequent requests
 	handleRequests()
