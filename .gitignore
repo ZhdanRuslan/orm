@@ -1,0 +1,8 @@
+orm
+/pkg/
+/.idea/
+/src/
+
+*.log
+
+*.txt
