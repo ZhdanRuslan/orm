@@ -12,6 +12,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
+//!~~~Get all users from DB~~~
 func allUsers(w http.ResponseWriter, r *http.Request) {
 	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
@@ -26,6 +27,7 @@ func allUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
+//!~~~Add new user to DB~~~
 func newUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("New User Endpoint Hit")
 
@@ -43,6 +45,7 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "New User Successfully Created")
 }
 
+//!~~~Delete user from DB~~~
 func deleteUser(w http.ResponseWriter, r *http.Request) {
 	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
@@ -60,6 +63,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Successfully Deleted User")
 }
 
+//!~~~Update user in DB~~~
 func updateUser(w http.ResponseWriter, r *http.Request) {
 	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
@@ -80,15 +84,17 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Successfully Updated User")
 }
 
+//!~~~Routing http requests~~~
 func handleRequests() {
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/users", allUsers).Methods("GET")
-	myRouter.HandleFunc("/user/{name}", deleteUser).Methods("DELETE")
-	myRouter.HandleFunc("/user/{name}/{email}", updateUser).Methods("PUT")
-	myRouter.HandleFunc("/user/{name}/{email}", newUser).Methods("POST")
-	log.Fatal(http.ListenAndServe(":8081", myRouter))
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/users", allUsers).Methods("GET")
+	router.HandleFunc("/user/{name}", deleteUser).Methods("DELETE")
+	router.HandleFunc("/user/{name}/{email}", updateUser).Methods("PUT")
+	router.HandleFunc("/user/{name}/{email}", newUser).Methods("POST")
+	log.Fatal(http.ListenAndServe(":8081", router))
 }
 
+//!~~~Init migration~~~
 func initialMigration() {
 	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
@@ -100,12 +106,14 @@ func initialMigration() {
 	db.AutoMigrate(&User{})
 }
 
+//!~~~Describe model~~~
 type User struct {
 	gorm.Model
 	Name  string
 	Email string
 }
 
+//!~~~main~~~
 func main() {
 	fmt.Println("Go ORM")
 
