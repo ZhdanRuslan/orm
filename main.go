@@ -6,6 +6,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 func allUsers(w http.ResponseWriter, r *http.Request) {
@@ -33,9 +36,28 @@ func handleRequests() {
 	log.Fatal(http.ListenAndServe(":8081", myRouter))
 }
 
+func initialMigration() {
+	db, err := gorm.Open("sqlite3", "test.db")
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("failed to connect database")
+	}
+	defer db.Close()
+
+	// Migrate the schema
+	db.AutoMigrate(&User{})
+}
+
+type User struct {
+	gorm.Model
+	Name  string
+	Email string
+}
 
 func main() {
 	fmt.Println("Go ORM")
+
+	initialMigration()
 
 	// Handle Subsequent requests
 	handleRequests()
